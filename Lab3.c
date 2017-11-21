@@ -1,6 +1,6 @@
-// Lab2.c
+// Lab3.c
 // Runs on LM4F120/TM4C123
-// Real Time Operating System for Labs 2 and 3
+// Real Time Operating System for Lab 3
 
 // Jonathan W. Valvano 2/20/17, valvano@mail.utexas.edu
 // Modified by Sile Shu 10/4/17, ss5de@virginia.edu
@@ -348,8 +348,8 @@ void Restart(void){
 	OS_bSignal(&LCDFree);
 	// restart
 	DataLost = 0;        // lost data between producer and consumer
-  NumSamples = 0;
-  UpdateWork = 0;
+    NumSamples = 0;
+    UpdateWork = 0;
 	MaxJitter = 0;       // in 1us units
 	PseudoCount = 0;
 	x = 63; y = 63;
