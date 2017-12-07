@@ -7,15 +7,15 @@
 // You may use, edit, run or distribute this file 
 // You are free to change the syntax/organization of this file
 
-
 #include <stdint.h>
+#include <string.h> 
 #include "OS.h"
 #include "tm4c123gh6pm.h"
 #include "LCD.h"
-#include <string.h> 
 #include "UART.h"
 #include "FIFO.h"
 #include "joystick.h"
+#include "Game.h"
 
 //constants
 #define BGCOLOR     LCD_BLACK
@@ -115,35 +115,15 @@ void Producer(void){
 	uint16_t rawX,rawY; // raw adc value
 	uint8_t select;
 	jsDataType data;
-	unsigned static long LastTime;  // time at previous ADC sample
-	unsigned long thisTime;         // time at current ADC sample
-	long jitter;                    // time between measured and expected, in us
-	if (NumSamples < RUNLENGTH){
-		BSP_Joystick_Input(&rawX,&rawY,&select);
-		thisTime = OS_Time();       // current time, 12.5 ns
-		UpdateWork += UpdatePosition(rawX,rawY,&data); // calculation work
-		NumSamples++;               // number of samples
-		if(JsFifo_Put(data) == 0){ // send to consumer
-			DataLost++;
-		}
-	//calculate jitter
-		if(UpdateWork > 1){    // ignore timing of first interrupt
-			unsigned long diff = OS_TimeDifference(LastTime,thisTime);
-			if(diff > PERIOD){
-				jitter = (diff-PERIOD+4)/8;  // in 0.1 usec
-			}
-			else{
-				jitter = (PERIOD-diff+4)/8;  // in 0.1 usec
-			}
-			if(jitter > MaxJitter){
-				MaxJitter = jitter; // in usec
-			}       // jitter should be 0
-			if(jitter >= JitterSize){
-				jitter = JITTERSIZE-1;
-			}
-			JitterHistogram[jitter]++; 
-		}
-		LastTime = thisTime;
+	//unsigned static long LastTime;  // time at previous ADC sample
+	//unsigned long thisTime;         // time at current ADC sample
+	//long jitter;                    // time between measured and expected, in us
+	BSP_Joystick_Input(&rawX,&rawY,&select);
+	//thisTime = OS_Time();       // current time, 12.5 ns
+	UpdateWork += UpdatePosition(rawX,rawY,&data); // calculation work
+	NumSamples++;               // number of samples
+	if(JsFifo_Put(data) == 0){ // send to consumer
+		DataLost++;
 	}
 }
 
@@ -199,21 +179,28 @@ void SW1Push(void){
 // inputs:  none
 // outputs: none
 void Consumer(void){
-	while(NumSamples < RUNLENGTH){
+	while(1){
 	jsDataType data;
 	JsFifo_Get(&data);
 	OS_bWait(&LCDFree);
 	ConsumerCount++;
-	BSP_LCD_DrawFastVLine(prevx,prevy-CROSSSIZE,2*CROSSSIZE,LCD_BLACK);
+	/*BSP_LCD_DrawFastVLine(prevx,prevy-CROSSSIZE,2*CROSSSIZE,LCD_BLACK);
 	BSP_LCD_DrawFastHLine(prevx-CROSSSIZE,prevy,2*CROSSSIZE,LCD_BLACK);
 	BSP_LCD_DrawFastVLine(data.x,data.y-CROSSSIZE,2*CROSSSIZE,LCD_GREEN);
-	BSP_LCD_DrawFastHLine(data.x-CROSSSIZE,data.y,2*CROSSSIZE,LCD_GREEN);
-	BSP_LCD_Message(1,5,0,"X: ",data.x);
-	BSP_LCD_Message(1,5,10,"Y: ",data.y);
+	BSP_LCD_DrawFastHLine(data.x-CROSSSIZE,data.y,2*CROSSSIZE,LCD_GREEN);*/
+	if(prevx != data.x) {
+		BSP_LCD_FillRect(prevx,100,10,10,LCD_BLACK);
+		if(data.x > 127-10) {
+			data.x = 127-10;
+		}
+		BSP_LCD_FillRect(data.x,100,10,10,LCD_GREEN);
+  }
+	BSP_LCD_Message(1,5,0,"Life: ",life);
+	BSP_LCD_Message(1,5,10,"Score: ",score);
 	OS_bSignal(&LCDFree);
 	prevx = data.x; prevy = data.y;
 	}
-  OS_Kill();  // done
+  //OS_Kill();  // done
 }
 
 
@@ -231,12 +218,10 @@ void Consumer(void){
 void CubeNumCalc(void){ 
 	uint16_t CurrentX,CurrentY;
   while(1) {
-		if(NumSamples < RUNLENGTH){
-			CurrentX = x; CurrentY = y;
-			area[0] = CurrentX / 22;
-			area[1] = CurrentY / 20;
-			Calculation++;
-		}
+		CurrentX = x; CurrentY = y;
+		area[0] = CurrentX / 22;
+		area[1] = CurrentY / 20;
+		Calculation++;
   }
 }
 //--------------end of Task 4-----------------------------
@@ -312,13 +297,13 @@ void PeriodicUpdater(void){
 // inputs:  none
 // outputs: none
 void Display(void){
-	while(NumSamples < RUNLENGTH){
+	/*while(NumSamples < RUNLENGTH){
 		OS_bWait(&LCDFree);
 		DisplayCount++;
-		BSP_LCD_Message(1,4,0,"PseudoCount: ",PseudoCount);
+		//BSP_LCD_Message(1,4,0,"PseudoCount: ",PseudoCount);
 		OS_bSignal(&LCDFree);
-	}
-  OS_Kill();  // done
+	//}
+  //OS_Kill();  // done*/
 }
 
 
@@ -394,19 +379,19 @@ int main(void){
 
 //********initialize communication channels
   JsFifo_Init();
-
+	initGame();
 //*******attach background tasks***********
   OS_AddSW1Task(&SW1Push,4);
 	OS_AddSW2Task(&SW2Push,4);
   OS_AddPeriodicThread(&Producer,PERIOD,3); // 2 kHz real time sampling of PD3
-	OS_AddPeriodicThread(&PeriodicUpdater,PSEUDOPERIOD,3);
+	//OS_AddPeriodicThread(&PeriodicUpdater,PSEUDOPERIOD,3);
 	
   NumCreated = 0 ;
 // create initial foreground threads
-  NumCreated += OS_AddThread(&Interpreter,128,2); 
+ // NumCreated += OS_AddThread(&Interpreter,128,2); 
   NumCreated += OS_AddThread(&Consumer,128,1); 
 	NumCreated += OS_AddThread(&CubeNumCalc,128,3); 
-	NumCreated += OS_AddThread(&Display,128,3);
+	//NumCreated += OS_AddThread(&Display,128,3);
  
   OS_Launch(TIME_2MS); // doesn't return, interrupts enabled in here
 	return 0;            // this never executes
