@@ -88,16 +88,16 @@ void Device_Init(void){
 //******** Producer *************** 
 int UpdatePosition(uint16_t rawx, uint16_t rawy, jsDataType* data){
 	if (rawx > origin[0]){
-		x = x + ((rawx - origin[0]) >> 9);
+		x = x + ((rawx - origin[0]) >> 7);
 	}
 	else{
-		x = x - ((origin[0] - rawx) >> 9);
+		x = x - ((origin[0] - rawx) >> 7);
 	}
 	if (rawy < origin[1]){
-		y = y + ((origin[1] - rawy) >> 9);
+		y = y + ((origin[1] - rawy) >> 7);
 	}
 	else{
-		y = y - ((rawy - origin[1]) >> 9);
+		y = y - ((rawy - origin[1]) >> 7);
 	}
 	if (x > 127){
 		x = 127;}
@@ -297,13 +297,14 @@ void PeriodicUpdater(void){
 // inputs:  none
 // outputs: none
 void Display(void){
-	/*while(NumSamples < RUNLENGTH){
+	while(1) {
+		int i;
 		OS_bWait(&LCDFree);
-		DisplayCount++;
-		//BSP_LCD_Message(1,4,0,"PseudoCount: ",PseudoCount);
+		for(i = 0;i < NUMSHIELDS;i++) {
+			BSP_LCD_FillRect(shields[i]->x,shields[i]->y,shield_w,shield_h,LCD_GREEN);
+		}
 		OS_bSignal(&LCDFree);
-	//}
-  //OS_Kill();  // done*/
+	}
 }
 
 
@@ -391,7 +392,7 @@ int main(void){
  // NumCreated += OS_AddThread(&Interpreter,128,2); 
   NumCreated += OS_AddThread(&Consumer,128,1); 
 	NumCreated += OS_AddThread(&CubeNumCalc,128,3); 
-	//NumCreated += OS_AddThread(&Display,128,3);
+	NumCreated += OS_AddThread(&Display,128,2);
  
   OS_Launch(TIME_2MS); // doesn't return, interrupts enabled in here
 	return 0;            // this never executes

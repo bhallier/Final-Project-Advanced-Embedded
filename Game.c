@@ -18,6 +18,5 @@ void initGame() {
 		shields[i]->x = 19+i*(16+20);	// Used to define equal spacing between shields
 		shields[i]->y = 85;
 		shields[i]->life = 10;
-		BSP_LCD_FillRect(shields[i]->x,shields[i]->y,shield_w,shield_h,LCD_GREEN);
 	}
 }
