@@ -366,6 +366,9 @@ void Display(void){
 				}
 		}
 		}
+		for(i = 0;i < NUMSHIELDS;i++) {
+ 			BSP_LCD_FillRect(shields[i]->x,shields[i]->y,shield_w,shield_h,LCD_GREEN);
+ 		}
 		OS_bSignal(&LCDFree);
 	}
   OS_Kill();  // done
