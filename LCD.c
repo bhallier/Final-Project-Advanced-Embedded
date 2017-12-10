@@ -1441,5 +1441,5 @@ void BSP_LCD_Message (int device, int line, int col, char *string, unsigned int 
 	StringVPosition = device * 7 + line;
 	DecimalHPosition = col + BSP_LCD_DrawString(col,StringVPosition,string,LCD_WHITE);
 	BSP_LCD_SetCursor(DecimalHPosition, StringVPosition);
-	BSP_LCD_OutUDec4(value, LCD_WHITE);
+	BSP_LCD_OutUDec(value, LCD_WHITE);
 }

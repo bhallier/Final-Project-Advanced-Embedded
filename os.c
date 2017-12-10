@@ -91,7 +91,7 @@ struct tcb{
   Sema4Type *blockPt;    // pointer to resource thread is blocked on (0 if not)
 #endif
 
-#ifdef prioritySched
+//#ifdef prioritySched
 #ifdef aging
   uint32_t age;          // how long the thread has been active
   uint32_t FixedPriority;// permanent priority
