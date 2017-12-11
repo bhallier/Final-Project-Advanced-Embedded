@@ -1,7 +1,6 @@
 #include <stdint.h>
 #include "Game.h"
 #include "tm4c123gh6pm.h"
-#include "LCD.h"
 
 uint16_t score,life,activeBullets;
 shield* shields[NUMSHIELDS];
@@ -20,7 +19,8 @@ void initGame() {
 	for(i = 0;i < NUMSHIELDS;i++) {
 		shields[i]->position[0] = 19+i*(16+20);	// Used to define equal spacing between shields
 		shields[i]->position[1] = 85;
-		shields[i]->life = 10;
+		shields[i]->life = 3;
+		shields[i]->notHit = 1;
 	}
 }
 /*

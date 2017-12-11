@@ -2,6 +2,7 @@
 #define __Game_H__
 #include <stdint.h>
 #include "tm4c123gh6pm.h"
+#include "LCD.h"
 
 #define NUMSHIELDS 3
 #define shield_h 8
@@ -12,6 +13,7 @@
 typedef struct shield{
 	uint16_t position[2];
 	uint16_t life;	// Points to array for shield health values
+	uint8_t notHit;
 } shield;
 
 /*typedef struct bullet{

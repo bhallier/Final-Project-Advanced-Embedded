@@ -21,6 +21,7 @@
 
 uint16_t ssBulletPos;
 uint8_t ssBulletFired;
+uint16_t shieldColors[4] = {LCD_BLACK, LCD_RED, LCD_YELLOW, LCD_GREEN};
 
 
 //constants
@@ -233,7 +234,11 @@ void Display(void){
 		}
 		}
 		for(i = 0;i < NUMSHIELDS;i++) {
- 			BSP_LCD_FillRect(shields[i]->position[0],shields[i]->position[1],shield_w,shield_h,LCD_GREEN);
+			if(shields[i]->notHit){
+				BSP_LCD_FillRect(shields[i]->position[0],shields[i]->position[1],shield_w,shield_h,shieldColors[shields[i]->life]);
+				if(shields[i]->life == 0)
+					shields[i]->notHit = 0;
+			}
  		}
 		//////////////////////////////
 		/*for(i = 0;i < activeBullets;i++) {
@@ -243,10 +248,16 @@ void Display(void){
 		if(spaceShipBullet.active){
 			BSP_LCD_FillRect(spaceShipBullet.old_position[0],spaceShipBullet.old_position[1],2,3,LCD_BLACK);
 			BSP_LCD_FillRect(spaceShipBullet.position[0],spaceShipBullet.position[1],2,3,spaceShipBullet.color);
+			spaceShipBullet.old_position[1] = spaceShipBullet.position[1];
 		}
 		if(alienBullet.active){
 			BSP_LCD_FillRect(alienBullet.old_position[0],alienBullet.old_position[1],2,3,LCD_BLACK);
 			BSP_LCD_FillRect(alienBullet.position[0],alienBullet.position[1],2,3,alienBullet.color);
+		}
+		if(alienBullet.hit) {
+			BSP_LCD_FillRect(alienBullet.old_position[0],alienBullet.old_position[1],2,3,LCD_BLACK);
+			BSP_LCD_FillRect(alienBullet.position[0],alienBullet.position[1],2,3,LCD_BLACK);
+			initSSBullet();
 		}
 		//////////////////////////////
 		drawPlayer(spaceShip);
@@ -332,6 +343,7 @@ int main(void){
 	NumCreated += OS_AddThread(&bulletThread,128,3);
 	
 	NumCreated +=OS_AddThread(&alienThread,128,3);
+	NumCreated +=OS_AddThread(&collisionThread,128,3);
  
   OS_Launch(TIME_2MS); // doesn't return, interrupts enabled in here
 	return 0;            // this never executes

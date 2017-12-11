@@ -21,5 +21,6 @@ extern uint8_t ssBulletFired;
 void initSSBullet();
 void initAlBullet();
 void bulletThread();
+void collisionThread();
 
 #endif
