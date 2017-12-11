@@ -5,7 +5,7 @@
 
 uint16_t score,life,activeBullets;
 shield* shields[NUMSHIELDS];
-bullet* bullets[10];	//Max bullets stored 10
+//bullet* bullets[10];	//Max bullets stored 10
 shield Shield1,Shield2,Shield3;
 player player1;
 
@@ -23,7 +23,7 @@ void initGame() {
 		shields[i]->life = 10;
 	}
 }
-
+/*
 void fireBullet(int16_t x, int16_t y){
 	bullet newBullet;
 	newBullet.position[0] = player1.position[0];
@@ -31,7 +31,7 @@ void fireBullet(int16_t x, int16_t y){
 	bullets[activeBullets] = &newBullet;
 	activeBullets++;
 }
-
+*/
 void drawPlayer(uint16_t* ssImage){
 	if(player1.position[0] != player1.old_position[0]){
 		BSP_LCD_FillRect(player1.old_position[0],100,15,15,LCD_BLACK);

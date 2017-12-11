@@ -14,11 +14,11 @@ typedef struct shield{
 	uint16_t life;	// Points to array for shield health values
 } shield;
 
-typedef struct bullet{
+/*typedef struct bullet{
 	uint16_t position[2];
 	uint16_t old_position[2];
 	uint8_t hit;
-} bullet;
+} bullet;*/
 
 typedef struct player{
 	uint16_t position[2];
@@ -29,7 +29,7 @@ typedef struct player{
 extern uint16_t score,life, activeBullets;
 extern shield Shield1,Shield2,Shield3;
 extern shield* shields[NUMSHIELDS];	// Contains the objects for each shield
-extern bullet* bullets[10];	// Contains the objects for each shield
+//extern bullet* bullets[10];	// Contains the objects for each shield
 
 void initGame();
 void fireBullet(int16_t x, int16_t y);

@@ -17,6 +17,11 @@
 #include "Game.h"
 #include "Aliens.h"
 #include "graphics.h"
+#include "bullet.h"
+
+uint16_t ssBulletPos;
+uint8_t ssBulletFired;
+
 
 //constants
 #define BGCOLOR     LCD_BLACK
@@ -166,6 +171,7 @@ void Consumer(void){
 				data.x = 127-15;
 		}
 		player1.position[0] = data.x;
+		ssBulletPos = data.x;
 	}
   //OS_Kill();  // done
 }
@@ -229,9 +235,20 @@ void Display(void){
 		for(i = 0;i < NUMSHIELDS;i++) {
  			BSP_LCD_FillRect(shields[i]->position[0],shields[i]->position[1],shield_w,shield_h,LCD_GREEN);
  		}
-		for(i = 0;i < activeBullets;i++) {
+		//////////////////////////////
+		/*for(i = 0;i < activeBullets;i++) {
  			BSP_LCD_FillRect(bullets[i]->position[0],bullets[i]->position[1],bullet_w,bullet_h,LCD_RED);
- 		}
+ 		}*/
+		
+		if(spaceShipBullet.active){
+			BSP_LCD_FillRect(spaceShipBullet.old_position[0],spaceShipBullet.old_position[1],2,3,LCD_BLACK);
+			BSP_LCD_FillRect(spaceShipBullet.position[0],spaceShipBullet.position[1],2,3,spaceShipBullet.color);
+		}
+		if(alienBullet.active){
+			BSP_LCD_FillRect(alienBullet.old_position[0],alienBullet.old_position[1],2,3,LCD_BLACK);
+			BSP_LCD_FillRect(alienBullet.position[0],alienBullet.position[1],2,3,alienBullet.color);
+		}
+		//////////////////////////////
 		drawPlayer(spaceShip);
 		BSP_LCD_Message(1,5,0,"Life: ",life);
 		BSP_LCD_Message(1,5,10,"Score: ",score);
@@ -277,7 +294,8 @@ void Restart(void){
 // Adds another foreground task
 // background threads execute once and return
 void SW2Push(void){
-	fireBullet(x,y);
+	//fireBullet(x,y);
+	ssBulletFired = 1;
 	//OS_Kill();  // done, OS does not return from a Kill
   }
 
@@ -294,6 +312,8 @@ int main(void){
   CrossHair_Init();
   DataLost = 0;        // lost data between producer and consumer
 
+	initSSBullet();
+	initAlBullet();
 //********initialize communication channels
   JsFifo_Init();
 	initGame();
@@ -309,8 +329,9 @@ int main(void){
   NumCreated += OS_AddThread(&Consumer,128,1); 
 	NumCreated += OS_AddThread(&CubeNumCalc,128,3); 
 	NumCreated += OS_AddThread(&Display,128,2);
+	NumCreated += OS_AddThread(&bulletThread,128,3);
 	
-	OS_AddThread(&alienThread,128,3);
+	NumCreated +=OS_AddThread(&alienThread,128,3);
  
   OS_Launch(TIME_2MS); // doesn't return, interrupts enabled in here
 	return 0;            // this never executes

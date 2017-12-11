@@ -6,8 +6,8 @@
 
 
 typedef struct bulletObj{
-	uint16_t position[2];
-	uint16_t old_position[2];
+	int16_t position[2];
+	int16_t old_position[2];
 	uint16_t color;
 	uint8_t active;
 	uint8_t hit;
