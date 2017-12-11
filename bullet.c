@@ -7,11 +7,8 @@
 bullet spaceShipBullet, alienBullet;
 
 void initSSBullet(){
-	ssBulletFired = 0;
 	spaceShipBullet.position[0] = -10;
 	spaceShipBullet.position[1] = -10;
-	spaceShipBullet.old_position[0] = -10;
-	spaceShipBullet.old_position[1] = -10;
 	spaceShipBullet.color = LCD_BLUE;
 	spaceShipBullet.active = 0;
 	spaceShipBullet.hit = 0;
@@ -47,10 +44,8 @@ void ssBulletThread(){
 }
 */
 void bulletThread() {
-	while(1){
 		if(ssBulletFired == 1 && spaceShipBullet.active!=1){
 			spaceShipBullet.position[0] = ssBulletPos+7;
-			spaceShipBullet.old_position[0] = ssBulletPos+7;
 			spaceShipBullet.position[1] = 97;
 			spaceShipBullet.active = 1;
 		}
@@ -78,8 +73,6 @@ void bulletThread() {
 				spaceShipBullet.old_position[1] = spaceShipBullet.position[1];
 				spaceShipBullet.position[1] -= 10;
 				if(spaceShipBullet.position[1] <= -10){
-					BSP_LCD_FillRect(spaceShipBullet.old_position[0],spaceShipBullet.old_position[1],2,3,LCD_BLACK);
-					initSSBullet();
 				}
 			}
 			/*else{
@@ -112,6 +105,7 @@ int collision(ax1,ay1,width_a,len_a,bx1,by1,width_b,len_b) {
 void collisionThread() {
 	int hit=0;
 	uint8_t i;
+<<<<<<< HEAD
 	while(1) {
 		if(spaceShipBullet.active)
 			hit = collision(spaceShipBullet.position[0],spaceShipBullet.position[1],3,2,Shield1.position[0],Shield1.position[1],shield_h,shield_w);
@@ -121,6 +115,19 @@ void collisionThread() {
 				BSP_LCD_FillRect(spaceShipBullet.old_position[0],spaceShipBullet.old_position[1],2,3,LCD_BLACK);
 		 initSSBullet();
 		 hit = 0;
+=======
+	while(life) {
+		if(spaceShipBullet.active)
+			hit = collision(spaceShipBullet.position[0],spaceShipBullet.position[1],3,2,Shield1.position[0],Shield1.position[1],shield_h,shield_w);
+		if(hit && (Shield1.life > 0)) {
+			ssBulletFired = 0;
+			Shield1.life--;
+			spaceShipBullet.active = 0;
+			BSP_LCD_FillRect(spaceShipBullet.position[0],spaceShipBullet.position[1],2,3,LCD_BLACK);
+			BSP_LCD_FillRect(spaceShipBullet.old_position[0],spaceShipBullet.old_position[1],2,3,LCD_BLACK);
+		 	hit = 0;
+		 //initSSBullet();
+>>>>>>> fcbfd02f080e03756d0cec0fc1410344345bfc45
 		 //spaceShipBullet.active = 0;
 		 //spaceShipBullet.hit = 1;
 			//BSP_LCD_FillRect(spaceShipBullet.position[0],spaceShipBullet.position[1],2,3,LCD_BLACK);
@@ -128,8 +135,6 @@ void collisionThread() {
 				//BSP_LCD_FillRect(spaceShipBullet.position[0],spaceShipBullet.position[1],2,3,LCD_BLACK);
 				//BSP_LCD_FillRect(spaceShipBullet.old_position[0],spaceShipBullet.old_position[1],2,3,LCD_BLACK);
 	   //initSSBullet();
-	 }
-	 OS_Sleep(10);
  }
 	/* 
 	 1) check to see if spaceship bullet has hit alien
