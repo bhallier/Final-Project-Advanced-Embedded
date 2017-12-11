@@ -78,6 +78,7 @@ void bulletThread() {
 			}
 			
 			if(spaceShipBullet.active){
+				spaceShipBullet.old_position[1] = spaceShipBullet.position[1];
 				spaceShipBullet.position[1] -= 10;
 				if(spaceShipBullet.position[1] <= -10){
 					//BSP_LCD_FillRect(spaceShipBullet.old_position[0],spaceShipBullet.old_position[1],2,3,LCD_BLACK);
@@ -115,8 +116,9 @@ int collision(ax1,ay1,width_a,len_a,bx1,by1,width_b,len_b) {
 }
 
 void collisionThread() {
-	int hit;
+	int hit=0;
 	uint8_t i;
+
 	while(life) {
 		if(spaceShipBullet.active)
 			hit = collision(spaceShipBullet.position[0],spaceShipBullet.position[1],3,2,Shield1.position[0],Shield1.position[1],shield_h,shield_w);
