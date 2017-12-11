@@ -251,10 +251,12 @@ void Display(void){
  			BSP_LCD_FillRect(bullets[i]->position[0],bullets[i]->position[1],bullet_w,bullet_h,LCD_RED);
  		}*/
 		
-		if(spaceShipBullet.active){
-			BSP_LCD_FillRect(spaceShipBullet.old_position[0],spaceShipBullet.old_position[1],2,3,LCD_BLACK);
-			BSP_LCD_FillRect(spaceShipBullet.position[0],spaceShipBullet.position[1],2,3,spaceShipBullet.color);
-			//spaceShipBullet.old_position[1] = spaceShipBullet.position[1];
+		if(spaceShipBullet.updated){
+			if(spaceShipBullet.active){
+				BSP_LCD_FillRect(spaceShipBullet.position[0],spaceShipBullet.position[1],2,3,spaceShipBullet.color);
+				BSP_LCD_FillRect(spaceShipBullet.old_position[0],spaceShipBullet.old_position[1],2,3,LCD_BLACK);
+				spaceShipBullet.old_position[1] = spaceShipBullet.position[1];
+			}
 		}
 		if(alienBullet.active){
 			BSP_LCD_FillRect(alienBullet.old_position[0],alienBullet.old_position[1],2,3,LCD_BLACK);

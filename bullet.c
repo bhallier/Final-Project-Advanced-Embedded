@@ -125,6 +125,7 @@ void collisionThread() {
 			BSP_LCD_FillRect(spaceShipBullet.old_position[0],spaceShipBullet.old_position[1],2,3,LCD_BLACK);
 		 	hit = 0;
 		}
+<<<<<<< HEAD
 		if(spaceShipBullet.active){
 			for(i=0;i<NUMALIENSblock;i++){
 				if(alienArray[i].active){
@@ -140,6 +141,8 @@ void collisionThread() {
 			}
 		}
 
+=======
+>>>>>>> 226cba2becd7d4763748cc505c458a78cb95aac0
 		OS_Sleep(10);
  }
 	/* 
