@@ -4,7 +4,7 @@
 
 alien alienArray[NUMALIENSblock];
 uint8_t activeAlien=0; // if this value is zero, that means whole block is destroyed and a new one should respawn
-uint16_t alien_type = 2; // can be 0,1 or 2 for three different types of aliens
+uint16_t alien_type = 0; // can be 0,1 or 2 for three different types of aliens
 uint16_t alienColors[3] = {LCD_YELLOW, LCD_BLUE, LCD_RED};
 uint16_t alienScores[3] = {10, 20, 30};
 
