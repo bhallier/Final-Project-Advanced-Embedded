@@ -314,7 +314,7 @@ void Restart(void){
 // background threads execute once and return
 void SW2Push(void){
 	//fireBullet(x,y);
-	ssBulletFired = 1;
+	initSSBullet();
 	//OS_Kill();  // done, OS does not return from a Kill
   }
 
