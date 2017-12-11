@@ -12,7 +12,7 @@ void initSSBullet(){
 	spaceShipBullet.position[1] = -10;
 	spaceShipBullet.old_position[0] = spaceShipBullet.position[0];
 	spaceShipBullet.old_position[1] = spaceShipBullet.position[1];
-	spaceShipBullet.color = LCD_BLUE;
+	spaceShipBullet.color = LCD_GREEN;
 	spaceShipBullet.active = 0;
 	spaceShipBullet.hit = 0;
 	spaceShipBullet.CurrentTime = OS_MsTime();
@@ -23,7 +23,7 @@ void initAlBullet(){
 	alienBullet.position[1] = -10;
 	alienBullet.old_position[0] = -10;
 	alienBullet.old_position[1] = -10;
-	alienBullet.color = LCD_RED;
+	alienBullet.color = LCD_ORANGE;
 	alienBullet.active = 0;
 	alienBullet.hit = 0;
 	alienBullet.CurrentTime = OS_MsTime();
@@ -69,7 +69,7 @@ void bulletThread() {
 				alienBullet.old_position[1] = alienBullet.position[1];
 				alienBullet.position[1] += 10;
 				if(alienBullet.position[1] >= 138){
-					BSP_LCD_FillRect(alienBullet.old_position[0],alienBullet.old_position[1],2,3,LCD_BLACK);
+					//BSP_LCD_FillRect(alienBullet.old_position[0],alienBullet.old_position[1],2,3,LCD_BLACK);
 					initAlBullet();
 				}
 			}
@@ -121,11 +121,28 @@ void collisionThread() {
 			ssBulletFired = 0;
 			Shield1.life--;
 			spaceShipBullet.active = 0;
-			BSP_LCD_FillRect(spaceShipBullet.position[0],spaceShipBullet.position[1],2,3,LCD_BLACK);
-			BSP_LCD_FillRect(spaceShipBullet.old_position[0],spaceShipBullet.old_position[1],2,3,LCD_BLACK);
 		 	hit = 0;
 		}
-<<<<<<< HEAD
+		
+//		if(spaceShipBullet.active)
+//			hit1 = collision(spaceShipBullet.position[0],spaceShipBullet.position[1],3,2,Shield2.position[0],Shield2.position[1],shield_h,shield_w);
+//		if(hit && (Shield1.life > 0)) {
+//			ssBulletFired = 0;
+//			Shield1.life--;
+//			spaceShipBullet.active = 0;
+//		 	hit = 0;
+//		}
+//		
+//		if(spaceShipBullet.active)
+//			hit = collision(spaceShipBullet.position[0],spaceShipBullet.position[1],3,2,Shield1.position[0],Shield1.position[1],shield_h,shield_w);
+//		if(hit && (Shield1.life > 0)) {
+//			ssBulletFired = 0;
+//			Shield1.life--;
+//			spaceShipBullet.active = 0;
+//		 	hit = 0;
+//		}
+		
+		
 		if(spaceShipBullet.active){
 			for(i=0;i<NUMALIENSblock;i++){
 				if(alienArray[i].active){
@@ -134,15 +151,20 @@ void collisionThread() {
 						ssBulletFired = 0;
 						spaceShipBullet.active = 0;
 						alienErase(&alienArray[i]);
-						BSP_LCD_FillRect(spaceShipBullet.position[0],spaceShipBullet.position[1],2,3,LCD_BLACK);
-						BSP_LCD_FillRect(spaceShipBullet.old_position[0],spaceShipBullet.old_position[1],2,3,LCD_BLACK);
+						score += alienArray[i].score;
 					}
 				}
 			}
 		}
-
-=======
->>>>>>> 226cba2becd7d4763748cc505c458a78cb95aac0
+		
+		if(alienBullet.active){
+			if(collision(alienBullet.position[0],alienBullet.position[1],3,2,ssPosition[0],100,15,15)){
+				life--;
+				alienBullet.active = 0;
+			}
+		}
+		spaceShipBullet.updated = 1;
+		alienBullet.updated = 1;
 		OS_Sleep(10);
  }
 	/* 

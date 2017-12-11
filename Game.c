@@ -12,7 +12,7 @@ player player1;
 void initGame() {
 	int i;
 	score = 0;
-	life = 10;
+	life = 5;
 	activeBullets = 0;
 	shields[0] = &Shield1;
 	shields[1] = &Shield2;

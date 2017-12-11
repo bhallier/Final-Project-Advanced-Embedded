@@ -22,6 +22,7 @@
 uint16_t ssBulletPos;
 uint8_t ssBulletFired;
 uint16_t shieldColors[4] = {LCD_BLACK, LCD_RED, LCD_YELLOW, LCD_GREEN};
+uint16_t ssPosition[2];
 
 
 //constants
@@ -174,6 +175,7 @@ void Consumer(void){
 				data.x = 127-15;
 		}
 		player1.position[0] = data.x;
+		ssPosition[0] = player1.position[0];
 		ssBulletPos = data.x;
 	}
   OS_Kill();  // done
@@ -256,16 +258,16 @@ void Display(void){
 				BSP_LCD_FillRect(spaceShipBullet.position[0],spaceShipBullet.position[1],2,3,spaceShipBullet.color);
 				BSP_LCD_FillRect(spaceShipBullet.old_position[0],spaceShipBullet.old_position[1],2,3,LCD_BLACK);
 				spaceShipBullet.old_position[1] = spaceShipBullet.position[1];
+				spaceShipBullet.updated = 0;
 			}
 		}
-		if(alienBullet.active){
-			BSP_LCD_FillRect(alienBullet.old_position[0],alienBullet.old_position[1],2,3,LCD_BLACK);
-			BSP_LCD_FillRect(alienBullet.position[0],alienBullet.position[1],2,3,alienBullet.color);
-		}
-		if(alienBullet.hit) {
-			BSP_LCD_FillRect(alienBullet.old_position[0],alienBullet.old_position[1],2,3,LCD_BLACK);
-			BSP_LCD_FillRect(alienBullet.position[0],alienBullet.position[1],2,3,LCD_BLACK);
-			initSSBullet();
+		if(alienBullet.updated){
+			if(alienBullet.active){
+				BSP_LCD_FillRect(alienBullet.position[0],alienBullet.position[1],2,3,alienBullet.color);
+				BSP_LCD_FillRect(alienBullet.old_position[0],alienBullet.old_position[1],2,3,LCD_BLACK);
+				alienBullet.old_position[1] = alienBullet.position[1];
+				alienBullet.updated = 0;
+			}
 		}
 		//////////////////////////////
 		drawPlayer(spaceShip);
