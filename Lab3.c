@@ -38,6 +38,8 @@ uint8_t ssBulletFired;
 #define LIFETIME             1000
 #define RUNLENGTH            600 // 30 seconds run length
 
+void GameOver();
+
 
 extern Sema4Type LCDFree;
 extern player player1;
@@ -163,7 +165,7 @@ void SW1Push(void){
 // inputs:  none
 // outputs: none
 void Consumer(void){
-	while(1){
+	while(life){
 		jsDataType data;
 		JsFifo_Get(&data);
 		ConsumerCount++;
@@ -173,7 +175,7 @@ void Consumer(void){
 		player1.position[0] = data.x;
 		ssBulletPos = data.x;
 	}
-  //OS_Kill();  // done
+  OS_Kill();  // done
 }
 
 
@@ -190,12 +192,13 @@ void Consumer(void){
 
 void CubeNumCalc(void){ 
 	uint16_t CurrentX,CurrentY;
-  while(1) {
+  while(life) {
 		CurrentX = x; CurrentY = y;
 		area[0] = CurrentX / 22;
 		area[1] = CurrentY / 20;
 		Calculation++;
   }
+	OS_Kill();
 }
 
 //************ PeriodicUpdater *************** 
@@ -213,12 +216,14 @@ void PeriodicUpdater(void){
 
 void Display(void){
 	uint8_t i=0;
-	while(1){
+	while(life){
 		OS_bWait(&LCDFree);
 		for(i=0; i<NUMALIENSblock; i++){
 			if(alienArray[i].active){
-				BSP_LCD_FillRect(alienArray[i].old_position[0],alienArray[i].old_position[1],alien_w,alien_h,LCD_BLACK);
+				if(alienArray[i].updated){
+					BSP_LCD_FillRect(alienArray[i].old_position[0],alienArray[i].old_position[1],alien_w,alien_h,LCD_BLACK);
 				//BSP_LCD_FillRect(alienArray[i].position[0],alienArray[i].position[1],alien_w,alien_h,alienArray[i].color);
+					alienArray[i].updated = 0;
 				switch(alien_type){
 					case 0:
 						BSP_LCD_DrawBitmap(alienArray[i].position[0],alienArray[i].position[1]+alien_h-1, alienGreen, alien_w,alien_h);
@@ -229,6 +234,7 @@ void Display(void){
 					case 2:
 						BSP_LCD_DrawBitmap(alienArray[i].position[0],alienArray[i].position[1]+alien_h-1, alienRed, alien_w,alien_h);
 						break;
+				}
 				}
 		}
 		}
@@ -253,7 +259,9 @@ void Display(void){
 		BSP_LCD_Message(1,5,0,"Life: ",life);
 		BSP_LCD_Message(1,5,10,"Score: ",score);
 		OS_bSignal(&LCDFree);
+		OS_Suspend();
 	}
+	GameOver();
   OS_Kill();  // done
 }
 
@@ -304,7 +312,11 @@ void CrossHair_Init(void){
 	BSP_Joystick_Input(&origin[0],&origin[1],&select);
 }
 
-
+void GameOver(){
+	BSP_LCD_FillRect(20,56,92,24,LCD_BLACK);
+	BSP_LCD_DrawString(4,6,"GAME OVER",LCD_WHITE);
+	BSP_LCD_Message(1,0,4,"Final Score: ",score);
+}
 int main(void){ 
 	creatAlienImage();
   OS_Init();           // initialize, disable interrupts

@@ -17,8 +17,10 @@ typedef struct alienObj{
 	uint8_t hit;
 	uint8_t hitGround;
 	uint8_t score;
+	uint8_t updated;
 } alien;
 
+extern uint16_t life;
 extern alien alienArray[NUMALIENSblock];	// Contains the object for each alien
 extern uint16_t alien_type; // can be 0,1 or 2 for three different types of aliens
 

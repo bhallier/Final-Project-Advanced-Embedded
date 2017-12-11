@@ -9,6 +9,7 @@ shield* shields[NUMSHIELDS];
 shield Shield1,Shield2,Shield3;
 player player1;
 
+
 void initGame() {
 	int i;
 	score = 0;
