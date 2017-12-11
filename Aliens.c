@@ -18,6 +18,7 @@ uint8_t hitRightWall = 0;
 uint8_t hitLeftWall = 0;
 int16_t direction = directionStep;  // +10 or -10
 int16_t goDown = 0;
+uint32_t currentTime = 0;
 
 
 void initAlien(){
@@ -40,6 +41,7 @@ void initAlien(){
 		}
 		alienLayer++;
 	}
+	currentTime = OS_MsTime();
 }
 
 extern Sema4Type LCDFree;
@@ -59,14 +61,6 @@ void alienMovement(){
 			alienArray[i].old_position[0] = alienArray[i].position[0];
 			alienArray[i].old_position[1] = alienArray[i].position[1];		
 			alienArray[i].position[1] += directionStep;
-			
-			/*this code is for testing respawn*/
-			/*if(alienArray[i].position[1]>=127){
-				activeAlien--;
-				alienArray[i].active = 0;
-				alienErase(&alienArray[i]);
-			}*/
-			/**********************************/
 		}
 		goDown = 0;
 		return;
@@ -100,25 +94,12 @@ void alienMovement(){
 }
 
 void alienThread(){
-	uint32_t count=0;
 	initAlien();
 	while(1){
-		
-		/*this code is for testing respawn*/
-		/*if(activeAlien==0){
-			alien_type++;
-			if(alien_type>2)
-				alien_type = 0;
-			OS_AddThread(&alienThread,128,3);
-			OS_Kill();
-		}*/
-		/**********************************/
-		
-		if(count>=100000){
+		if((OS_MsTime()-currentTime) > 500){
+			currentTime = OS_MsTime();
 			alienMovement();
-			count = 0;
 		}
-		count++;
 	}
 	alien_type++;
 	if(alien_type>2)
