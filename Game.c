@@ -26,8 +26,8 @@ void initGame() {
 
 void fireBullet(int16_t x, int16_t y){
 	bullet newBullet;
-	newBullet.position[0] = x;
-	newBullet.position[1] = y;
+	newBullet.position[0] = player1.position[0];
+	newBullet.position[1] = player1.position[0];
 	bullets[activeBullets] = &newBullet;
 	activeBullets++;
 }

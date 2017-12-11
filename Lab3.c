@@ -326,7 +326,6 @@ void CrossHair_Init(void){
 }
 
 
-//*******************final user main DEMONTRATE THIS TO TA**********
 int main(void){ 
 	creatAlienImage();
   OS_Init();           // initialize, disable interrupts
