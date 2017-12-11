@@ -33,6 +33,6 @@ extern bullet* bullets[10];	// Contains the objects for each shield
 
 void initGame();
 void fireBullet(int16_t x, int16_t y);
-void drawPlayer();
+void drawPlayer(uint16_t*);
 
 #endif

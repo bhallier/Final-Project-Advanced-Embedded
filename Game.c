@@ -32,10 +32,11 @@ void fireBullet(int16_t x, int16_t y){
 	activeBullets++;
 }
 
-void drawPlayer(){
+void drawPlayer(uint16_t* ssImage){
 	if(player1.position[0] != player1.old_position[0]){
-		BSP_LCD_FillRect(player1.old_position[0],100,10,10,LCD_BLACK);
-		BSP_LCD_FillRect(player1.position[0],100,10,10,LCD_GREEN);
+		BSP_LCD_FillRect(player1.old_position[0],100,15,15,LCD_BLACK);
+		//BSP_LCD_FillRect(player1.position[0],100,10,10,LCD_GREEN);
+		BSP_LCD_DrawBitmap(player1.position[0],100+14, ssImage, 15,15);
 		player1.old_position[0] = player1.position[0];
 	}
 }
