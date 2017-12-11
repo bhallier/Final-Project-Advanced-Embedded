@@ -315,6 +315,7 @@ void Restart(void){
 void SW2Push(void){
 	//fireBullet(x,y);
 	initSSBullet();
+	ssBulletFired = 1;
 	//OS_Kill();  // done, OS does not return from a Kill
   }
 

@@ -7,7 +7,7 @@
 bullet spaceShipBullet, alienBullet;
 
 void initSSBullet(){
-	ssBulletFired = 1;
+	//ssBulletFired = 1;
 	spaceShipBullet.position[0] = -10;
 	spaceShipBullet.position[1] = -10;
 	spaceShipBullet.old_position[0] = spaceShipBullet.position[0];
@@ -93,7 +93,6 @@ void bulletThread() {
 
 
 
-
 /////////////////////////Collision
 
 int collision(ax1,ay1,width_a,len_a,bx1,by1,width_b,len_b) {
@@ -125,15 +124,22 @@ void collisionThread() {
 			BSP_LCD_FillRect(spaceShipBullet.position[0],spaceShipBullet.position[1],2,3,LCD_BLACK);
 			BSP_LCD_FillRect(spaceShipBullet.old_position[0],spaceShipBullet.old_position[1],2,3,LCD_BLACK);
 		 	hit = 0;
-		 //initSSBullet();
-		 //spaceShipBullet.active = 0;
-		 //spaceShipBullet.hit = 1;
-			//BSP_LCD_FillRect(spaceShipBullet.position[0],spaceShipBullet.position[1],2,3,LCD_BLACK);
-	 
-				//BSP_LCD_FillRect(spaceShipBullet.position[0],spaceShipBullet.position[1],2,3,LCD_BLACK);
-				//BSP_LCD_FillRect(spaceShipBullet.old_position[0],spaceShipBullet.old_position[1],2,3,LCD_BLACK);
-	   //initSSBullet();
 		}
+		if(spaceShipBullet.active){
+			for(i=0;i<NUMALIENSblock;i++){
+				if(alienArray[i].active){
+					if(collision(spaceShipBullet.position[0],spaceShipBullet.position[1],3,2,alienArray[i].position[0],alienArray[i].position[1],10,10)){
+						alienArray[i].active = 0;
+						ssBulletFired = 0;
+						spaceShipBullet.active = 0;
+						alienErase(&alienArray[i]);
+						BSP_LCD_FillRect(spaceShipBullet.position[0],spaceShipBullet.position[1],2,3,LCD_BLACK);
+						BSP_LCD_FillRect(spaceShipBullet.old_position[0],spaceShipBullet.old_position[1],2,3,LCD_BLACK);
+					}
+				}
+			}
+		}
+
 		OS_Sleep(10);
  }
 	/* 

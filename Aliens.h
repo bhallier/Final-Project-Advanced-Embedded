@@ -26,5 +26,6 @@ extern uint16_t alien_type; // can be 0,1 or 2 for three different types of alie
 
 void initAlien();
 void alienThread();
+void alienErase(alien*);
 
 #endif

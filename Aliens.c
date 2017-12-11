@@ -105,7 +105,7 @@ void alienThread(){
 	uint8_t i;
 	initAlien();
 	while(life){
-		if((OS_MsTime()-currentTime) > 500){
+		if((OS_MsTime()-currentTime) > 250){
 			currentTime = OS_MsTime();
 			alienMovement();
 		}
