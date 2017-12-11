@@ -9,7 +9,7 @@ typedef struct bulletObj{
 	int16_t position[2];
 	int16_t old_position[2];
 	uint16_t color;
-	uint8_t active;
+	uint8_t active, updated;
 	uint8_t hit;
 	uint32_t CurrentTime;
 }bullet;
