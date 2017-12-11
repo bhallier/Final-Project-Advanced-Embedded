@@ -255,9 +255,12 @@ void Display(void){
 			if(spaceShipBullet.active){
 				BSP_LCD_FillRect(spaceShipBullet.position[0],spaceShipBullet.position[1],2,3,spaceShipBullet.color);
 			BSP_LCD_FillRect(spaceShipBullet.old_position[0],spaceShipBullet.old_position[1],2,3,LCD_BLACK);
+<<<<<<< HEAD
 				
 			spaceShipBullet.old_position[1] = spaceShipBullet.position[1];
 			}
+=======
+>>>>>>> 54c1aeae57f06602955707e3c70b865fc7dfd729
 		}
 		if(alienBullet.active){
 			BSP_LCD_FillRect(alienBullet.old_position[0],alienBullet.old_position[1],2,3,LCD_BLACK);

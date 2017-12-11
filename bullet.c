@@ -78,7 +78,6 @@ void bulletThread() {
 			}
 			
 			if(spaceShipBullet.active){
-				//spaceShipBullet.old_position[1] = spaceShipBullet.position[1];
 				spaceShipBullet.position[1] -= 10;
 				if(spaceShipBullet.position[1] <= -10){
 					//BSP_LCD_FillRect(spaceShipBullet.old_position[0],spaceShipBullet.old_position[1],2,3,LCD_BLACK);
