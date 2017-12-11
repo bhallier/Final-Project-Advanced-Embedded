@@ -124,23 +124,23 @@ void collisionThread() {
 		 	hit = 0;
 		}
 		
-//		if(spaceShipBullet.active)
-//			hit1 = collision(spaceShipBullet.position[0],spaceShipBullet.position[1],3,2,Shield2.position[0],Shield2.position[1],shield_h,shield_w);
-//		if(hit && (Shield1.life > 0)) {
-//			ssBulletFired = 0;
-//			Shield1.life--;
-//			spaceShipBullet.active = 0;
-//		 	hit = 0;
-//		}
-//		
-//		if(spaceShipBullet.active)
-//			hit = collision(spaceShipBullet.position[0],spaceShipBullet.position[1],3,2,Shield1.position[0],Shield1.position[1],shield_h,shield_w);
-//		if(hit && (Shield1.life > 0)) {
-//			ssBulletFired = 0;
-//			Shield1.life--;
-//			spaceShipBullet.active = 0;
-//		 	hit = 0;
-//		}
+		if(spaceShipBullet.active)
+			hit = collision(spaceShipBullet.position[0],spaceShipBullet.position[1],3,2,Shield2.position[0],Shield2.position[1],shield_h,shield_w);
+		if(hit && (Shield2.life > 0)) {
+			ssBulletFired = 0;
+			Shield2.life--;
+			spaceShipBullet.active = 0;
+		 	hit = 0;
+		}
+		
+		if(spaceShipBullet.active)
+			hit = collision(spaceShipBullet.position[0],spaceShipBullet.position[1],3,2,Shield3.position[0],Shield3.position[1],shield_h,shield_w);
+		if(hit && (Shield3.life > 0)) {
+			ssBulletFired = 0;
+			Shield3.life--;
+			spaceShipBullet.active = 0;
+		 	hit = 0;
+		}
 		
 		
 		if(spaceShipBullet.active){
