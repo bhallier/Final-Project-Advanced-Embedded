@@ -20,6 +20,7 @@ int16_t direction = directionStep;  // +10 or -10
 int16_t goDown = 0;
 uint32_t currentTime = 0;
 
+extern void GameOver();
 
 void initAlien(){
 	uint8_t i, alienIndex;
@@ -37,6 +38,7 @@ void initAlien(){
 			alienArray[alienIndex].hit = 0;
 			alienArray[alienIndex].hitGround = 0;
 			alienArray[alienIndex].active = 1;
+			alienArray[alienIndex].updated = 1;
 			activeAlien++;
 		}
 		alienLayer++;
@@ -61,6 +63,11 @@ void alienMovement(){
 			alienArray[i].old_position[0] = alienArray[i].position[0];
 			alienArray[i].old_position[1] = alienArray[i].position[1];		
 			alienArray[i].position[1] += directionStep;
+			alienArray[i].updated = 1;
+			if(alienArray[i].position[1] == 80 && alienArray[i].active){
+				life = 0;
+			}
+				
 		}
 		goDown = 0;
 		return;
@@ -70,6 +77,7 @@ void alienMovement(){
 		alienArray[alienIndex].old_position[0] = alienArray[alienIndex].position[0];
 		alienArray[alienIndex].old_position[1] = alienArray[alienIndex].position[1];		
 		alienArray[alienIndex].position[0] += direction;
+		alienArray[alienIndex].updated = 1;
 	}
 	if(alienArray[moveLayer*6].position[0] <= wallPosX[0])
 		hitLeftWall++;
@@ -94,15 +102,17 @@ void alienMovement(){
 }
 
 void alienThread(){
+	uint8_t i;
 	initAlien();
-	while(1){
+	while(life){
 		if((OS_MsTime()-currentTime) > 500){
 			currentTime = OS_MsTime();
 			alienMovement();
 		}
+		OS_Suspend();
 	}
-	alien_type++;
-	if(alien_type>2)
-		alien_type = 0;
+	//alien_type++;
+	//if(alien_type>2)
+	//	alien_type = 0;
 	OS_Kill();
 }
