@@ -18,6 +18,7 @@ extern bullet spaceShipBullet, alienBullet;
 extern uint16_t ssBulletPos;
 extern uint8_t ssBulletFired;
 extern uint16_t ssPosition[2];
+extern void GameOver();
 
 void initSSBullet();
 void initAlBullet();
